@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Loading Page | Beez's Portfolio</title>
+    <meta name="description" content="Custom browser homepage with loading animations">
+    <meta name="author" content="Beez Picasso">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png">
+
+    <!-- Custom Loading Page Style -->
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .back-arrow {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .back-arrow:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .hover-text {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+            pointer-events: none;
+        }
+
+        .mouse-icon {
+            font-size: 24px;
+        }
+
+        .trail-image {
+            position: absolute;
+            width: auto;
+            height: 120px;
+            border-radius: 12px;
+            border: 2px solid white;
+            background-color: #222;
+            object-fit: cover;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.5);
+            transition: opacity 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <!-- Back Arrow -->
+        <a href="index.html" class="back-arrow">←</a>
+
+        <div class="hover-text">
+            <span class="mouse-icon">🖱️</span>
+            <span>Move cursor</span>
+        </div>
+    </div>
+
+    <!-- Images for the trail (will be hidden initially) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('container');
+
+            // Define image paths - replace these with your actual image paths
+            const images = [
+                'img/card1.png',
+                'img/card2.png',
+                'img/card3.png',
+                'img/card4.png',
+                'img/card5.png',
+                'img/card6.png',
+                'img/card7.png',
+                'img/cardcalculator.png',
+                // Add more images as needed
+            ];
+
+            // Create image elements
+            images.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'trail-image';
+                img.alt = `Trail image ${index}`;
+                img.dataset.index = index;
+                container.appendChild(img);
+            });
+
+            let lastPosition = { x: 0, y: 0 };
+            let imageIndex = 0;
+            const bufferDistance = 50; // Distance in pixels before showing a new image
+
+            // Handle mouse movement
+            container.addEventListener('mousemove', (e) => {
+                const { clientX, clientY } = e;
+
+                // Calculate distance from last render position
+                const distance = calculateDistance(
+                    clientX,
+                    clientY,
+                    lastPosition.x,
+                    lastPosition.y
+                );
+
+                // Only render a new image if we've moved enough
+                if (distance >= bufferDistance) {
+                    lastPosition = { x: clientX, y: clientY };
+                    renderNextImage(clientX, clientY);
+                }
+            });
+
+            function calculateDistance(x1, y1, x2, y2) {
+                const deltaX = x2 - x1;
+                const deltaY = y2 - y1;
+                return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            }
+
+            function renderNextImage(x, y) {
+                // Get the image to display
+                const index = imageIndex % images.length;
+                const img = document.querySelector(`.trail-image[data-index="${index}"]`);
+
+                // Position the image at the cursor
+                img.style.left = `${x}px`;
+                img.style.top = `${y}px`;
+                img.style.zIndex = imageIndex.toString();
+
+                // Apply animation
+                const rotation = Math.random() * 25; // Random rotation up to 25 degrees
+                const isEven = index % 2 === 0;
+
+                // Reset styles to prepare for animation
+                img.style.opacity = '0';
+                img.style.transform = `translate(-50%, -25%) scale(0.5) rotate(${isEven ? rotation : -rotation}deg)`;
+
+                // Force reflow to ensure animation works
+                void img.offsetWidth;
+
+                // Animate in
+                img.style.opacity = '1';
+                img.style.transform = `translate(-50%, -50%) scale(1) rotate(${isEven ? -rotation : rotation}deg)`;
+
+                // Animate out after delay
+                setTimeout(() => {
+                    img.style.opacity = '0';
+                }, 5000);
+
+                // Increment counter for next image
+                imageIndex++;
+            }
+        });
+    </script>
+</body>
+</html>
