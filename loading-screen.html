@@ -18,14 +18,19 @@
             font-family: Arial, sans-serif;
             background-color: #121212;
             color: white;
-            overflow: hidden;
+            /* Updated background handling */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            transition: background-image 0.5s ease-in-out;
         }
 
         .container {
             position: relative;
             width: 100vw;
             height: 100vh;
-            overflow: hidden;
+            overflow: auto; /* Changed from hidden to auto to allow scrolling if needed */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -55,6 +60,113 @@
             background-color: rgba(0, 0, 0, 0.5);
         }
 
+        .settings-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 24px;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        .settings-icon:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .settings-panel {
+            position: absolute;
+            top: 70px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 9998;
+            display: none;
+            width: 280px;
+        }
+
+        .settings-panel h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #FFD700; /* Gold color for headers */
+        }
+
+        .settings-panel label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .settings-panel input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #FFD700; /* Gold border */
+            background-color: #222;
+            color: white;
+        }
+
+        .settings-panel button {
+            padding: 8px 12px;
+            background-color: #FFD700; /* Gold background */
+            color: #000; /* Black text for contrast */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .settings-panel button:hover {
+            background-color: #DAA520; /* Darker gold on hover */
+        }
+
+        .settings-panel .background-settings {
+            margin-bottom: 20px;
+        }
+
+        .settings-panel .background-options {
+            margin-bottom: 10px;
+        }
+
+        .settings-panel .background-option {
+            margin-bottom: 5px;
+        }
+
+        .settings-panel .background-thumbnails {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .settings-panel .background-thumbnail {
+            width: 60px;
+            height: 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid transparent;
+        }
+
+        .settings-panel .background-thumbnail.active {
+            border-color: #FFD700; /* Gold border for active thumbnail */
+        }
+
         .hover-text {
             display: flex;
             align-items: center;
@@ -64,6 +176,10 @@
             text-transform: uppercase;
             color: white;
             pointer-events: none;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-bottom: 40px;
         }
 
         .mouse-icon {
@@ -75,13 +191,76 @@
             width: auto;
             height: 120px;
             border-radius: 12px;
-            border: 2px solid white;
+            border: 2px solid #FFD700; /* Gold border for images */
             background-color: #222;
             object-fit: cover;
             opacity: 0;
             pointer-events: none;
             transform: translate(-50%, -50%) scale(0.5);
             transition: opacity 0.3s;
+        }
+
+        .search-container {
+            position: relative;
+            width: 600px;
+            max-width: 90%;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .search-container {
+                width: 90%;
+            }
+        }
+
+        .search-form {
+            display: flex;
+            border-radius: 24px;
+            background-color: rgba(255, 255, 255, 0.95);
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            height: 48px;
+            border: 2px solid #FFD700; /* Gold border */
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0 16px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            color: #000;
+        }
+
+        .search-button {
+            width: 60px;
+            height: 48px;
+            background-color: #FFD700; /* Gold background */
+            border: none;
+            color: #000; /* Black icon color for contrast */
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-button:hover {
+            background-color: #DAA520; /* Darker gold on hover */
+        }
+
+        .search-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        /* Egyptian theme accents */
+        .egyptian-divider {
+            height: 4px;
+            width: 600px;
+            max-width: 90%;
+            background: linear-gradient(to right, transparent, #FFD700, transparent);
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -91,32 +270,226 @@
         <!-- Back Arrow -->
         <a href="index.html" class="back-arrow">←</a>
 
+        <!-- Settings Icon -->
+        <div class="settings-icon" id="settingsIcon">⚙️</div>
+
+        <!-- Settings Panel -->
+        <div class="settings-panel" id="settingsPanel">
+            <h3>Background Settings</h3>
+
+            <div class="background-settings">
+                <div class="background-options">
+                    <div class="background-option">
+                        <label>
+                            <input type="radio" name="bgSize" value="cover" checked> Cover (fill screen)
+                        </label>
+                    </div>
+                    <div class="background-option">
+                        <label>
+                            <input type="radio" name="bgSize" value="contain"> Contain (show full image)
+                        </label>
+                    </div>
+                    <div class="background-option">
+                        <label>
+                            <input type="radio" name="bgSize" value="repeat"> Repeat (if image is small)
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="background-thumbnails" id="backgroundThumbnails">
+                <!-- Thumbnails will be added by JS -->
+            </div>
+
+            <label for="customBgUrl">Custom Background URL:</label>
+            <input type="text" id="customBgUrl" placeholder="https://example.com/image.jpg">
+
+            <button id="applyCustomBg">Apply</button>
+        </div>
+
+        <!-- Google Search Bar -->
+        <div class="search-container">
+            <form class="search-form" action="https://www.google.com/search" method="get" target="_blank">
+                <input type="text" class="search-input" name="q" placeholder="Search Google..." autocomplete="off" id="searchInput">
+
+                <!-- Search Button -->
+                <button type="submit" class="search-button">
+                    <svg class="search-icon" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path fill="#000" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"></path>
+                    </svg>
+                </button>
+            </form>
+        </div>
+
+        <div class="egyptian-divider"></div>
+
         <div class="hover-text">
             <span class="mouse-icon">🖱️</span>
             <span>Move cursor</span>
         </div>
     </div>
 
-    <!-- Images for the trail (will be hidden initially) -->
+    <!-- Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const container = document.getElementById('container');
+            const body = document.body;
+            const settingsIcon = document.getElementById('settingsIcon');
+            const settingsPanel = document.getElementById('settingsPanel');
+            const customBgUrlInput = document.getElementById('customBgUrl');
+            const applyCustomBgButton = document.getElementById('applyCustomBg');
+            const backgroundThumbnails = document.getElementById('backgroundThumbnails');
+            const searchInput = document.getElementById('searchInput');
+            const bgSizeOptions = document.getElementsByName('bgSize');
 
-            // Define image paths - replace these with your actual image paths
-            const images = [
-                'img/card1.png',
-                'img/card2.png',
-                'img/card3.png',
-                'img/card4.png',
-                'img/card5.png',
-                'img/card6.png',
-                'img/card7.png',
-                'img/cardcalculator.png',
-                // Add more images as needed
+            // Define image paths for the trailing images
+            const trailImages = [
+                'img/trail1.png',
+                'img/trail2.png',
+                'img/trail3.png',
+                'img/trail4.png',
+                'img/trail5.png',
+                'img/trail6.png',
+                'img/trail7.png'
             ];
 
-            // Create image elements
-            images.forEach((src, index) => {
+            // Default background options
+            const backgroundOptions = [
+                { url: 'img/bg1.jpg', label: 'Default 1' },
+                { url: 'img/bg2.jpg', label: 'Default 2' },
+                { url: 'img/bg3.jpg', label: 'Default 3' },
+                { url: 'img/header-bg.jpg', label: 'Header BG' },
+                { url: '', label: 'None' }
+            ];
+
+            // Load saved background settings from localStorage
+            const savedBackground = localStorage.getItem('loadingPageBackground');
+            const savedBgSize = localStorage.getItem('loadingPageBgSize') || 'repeat'; // Default to repeat
+
+            // Apply saved background settings
+            if (savedBackground) {
+                body.style.backgroundImage = `url(${savedBackground})`;
+            }
+
+            // Apply saved background size or default to repeat
+            for (let option of bgSizeOptions) {
+                if (option.value === savedBgSize) {
+                    option.checked = true;
+                    applyBackgroundSize(savedBgSize);
+                    break;
+                }
+            }
+
+            // Function to apply background size
+            function applyBackgroundSize(size) {
+                switch(size) {
+                    case 'cover':
+                        body.style.backgroundSize = 'cover';
+                        body.style.backgroundRepeat = 'no-repeat';
+                        break;
+                    case 'contain':
+                        body.style.backgroundSize = 'contain';
+                        body.style.backgroundRepeat = 'no-repeat';
+                        break;
+                    case 'repeat':
+                        body.style.backgroundSize = 'auto';
+                        body.style.backgroundRepeat = 'repeat';
+                        break;
+                }
+                localStorage.setItem('loadingPageBgSize', size);
+            }
+
+            // Add event listeners for background size options
+            for (let option of bgSizeOptions) {
+                option.addEventListener('change', function() {
+                    if (this.checked) {
+                        applyBackgroundSize(this.value);
+                    }
+                });
+            }
+
+            // Create background thumbnails
+            backgroundOptions.forEach((bg, index) => {
+                const thumbnail = document.createElement('div');
+                thumbnail.className = 'background-thumbnail';
+                thumbnail.title = bg.label;
+
+                if (bg.url) {
+                    thumbnail.style.backgroundImage = `url(${bg.url})`;
+                } else {
+                    thumbnail.style.backgroundColor = '#121212';
+                    thumbnail.style.display = 'flex';
+                    thumbnail.style.justifyContent = 'center';
+                    thumbnail.style.alignItems = 'center';
+                    thumbnail.innerHTML = '✕';
+                }
+
+                // Mark active background
+                if (savedBackground === bg.url || (!savedBackground && index === 0)) {
+                    thumbnail.classList.add('active');
+                }
+
+                thumbnail.addEventListener('click', () => {
+                    // Remove active class from all thumbnails
+                    document.querySelectorAll('.background-thumbnail').forEach(thumb => {
+                        thumb.classList.remove('active');
+                    });
+
+                    // Add active class to clicked thumbnail
+                    thumbnail.classList.add('active');
+
+                    // Set background
+                    if (bg.url) {
+                        body.style.backgroundImage = `url(${bg.url})`;
+                        localStorage.setItem('loadingPageBackground', bg.url);
+                    } else {
+                        body.style.backgroundImage = 'none';
+                        localStorage.removeItem('loadingPageBackground');
+                    }
+                });
+
+                backgroundThumbnails.appendChild(thumbnail);
+            });
+
+            // Toggle settings panel
+            settingsIcon.addEventListener('click', () => {
+                if (settingsPanel.style.display === 'block') {
+                    settingsPanel.style.display = 'none';
+                } else {
+                    settingsPanel.style.display = 'block';
+                }
+            });
+
+            // Apply custom background
+            applyCustomBgButton.addEventListener('click', () => {
+                const customUrl = customBgUrlInput.value.trim();
+                if (customUrl) {
+                    // Remove active class from all thumbnails
+                    document.querySelectorAll('.background-thumbnail').forEach(thumb => {
+                        thumb.classList.remove('active');
+                    });
+
+                    // Set background
+                    body.style.backgroundImage = `url(${customUrl})`;
+                    localStorage.setItem('loadingPageBackground', customUrl);
+
+                    // Clear input
+                    customBgUrlInput.value = '';
+
+                    // Close settings panel
+                    settingsPanel.style.display = 'none';
+                }
+            });
+
+            // Close settings panel when clicking outside
+            document.addEventListener('click', (event) => {
+                if (!settingsPanel.contains(event.target) && event.target !== settingsIcon) {
+                    settingsPanel.style.display = 'none';
+                }
+            });
+
+            // Create image elements for the trail
+            trailImages.forEach((src, index) => {
                 const img = document.createElement('img');
                 img.src = src;
                 img.className = 'trail-image';
@@ -156,7 +529,7 @@
 
             function renderNextImage(x, y) {
                 // Get the image to display
-                const index = imageIndex % images.length;
+                const index = imageIndex % trailImages.length;
                 const img = document.querySelector(`.trail-image[data-index="${index}"]`);
 
                 // Position the image at the cursor
@@ -179,10 +552,10 @@
                 img.style.opacity = '1';
                 img.style.transform = `translate(-50%, -50%) scale(1) rotate(${isEven ? -rotation : rotation}deg)`;
 
-                // Animate out after delay
+                // Animate out after 0.5 seconds
                 setTimeout(() => {
                     img.style.opacity = '0';
-                }, 5000);
+                }, 500); // Changed from 5000ms to 500ms (0.5 seconds)
 
                 // Increment counter for next image
                 imageIndex++;
